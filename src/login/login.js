@@ -1,5 +1,5 @@
 import api from "../utils/apiHelper.js";
-import {isAuthenticated} from "../utils/authHelper.js";
+import { isAuthenticated } from "../utils/authHelper.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   if (isAuthenticated()) {

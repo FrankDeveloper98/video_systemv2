@@ -190,7 +190,7 @@ header h1 {
   background: var(--secondary-bg);
   padding: 2rem;
   border-radius: 8px;
-  height: 50vh;
+  height: fit-content;
   min-width: 50vw;
 }
 .close-btn {
