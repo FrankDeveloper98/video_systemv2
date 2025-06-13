@@ -1,5 +1,7 @@
 import api from "../utils/apiHelper.js";
 import { logout } from "../utils/authHelper.js";
+import { isAuthenticated, getCurrentUserRole } from "../utils/authHelper.js";
+
 const searchInput = document.getElementById("search-input");
 const searchButton = document.getElementById("search-button");
 const themeToggle = document.getElementById("theme-toggle");
@@ -11,6 +13,13 @@ let favoriteMovies = [];
 let filteredFavorites = [];
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (isAuthenticated()) {
+    const role = getCurrentUserRole();
+    if (role === 1) {
+      window.location.href = "/src/admin/dashboard/dashboard.html";
+      return;
+    }
+  }
   loadTheme();
   fetchFavoriteMovies();
   themeToggle.addEventListener("click", toggleTheme);

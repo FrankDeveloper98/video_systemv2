@@ -1,8 +1,9 @@
 import api from "../../utils/apiHelper";
+import { logout } from "../../utils/authHelper";
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("myModal");
-  const openBtn = document.getElementById("openModalBtn");
+  // const openBtn = document.getElementById("openModalBtn");
   const closeBtn = modal.querySelector(".close-btn");
   const gridItems = document.querySelectorAll(".grid-item");
   const modalTitle = modal.querySelector("#modalTitle");
@@ -90,8 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "../users/users.html";
       } else if (title === "Administrar Peliculas") {
         window.location.href = "../movies/movies.html";
-
-      }else {
+      } else {
         modalTitle.textContent = title;
         modalBody.innerHTML = `
             <p>Funcionalidad para "${title}" aún no implementada.</p>`;
@@ -104,4 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.onclick = (e) => {
     if (e.target === modal) modal.classList.remove("active");
   };
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    logout();
+  });
 });

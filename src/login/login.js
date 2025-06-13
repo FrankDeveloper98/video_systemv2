@@ -1,10 +1,6 @@
 import api from "../utils/apiHelper.js";
-import { isAuthenticated } from "../utils/authHelper.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (isAuthenticated()) {
-    window.location.href = "../movies/movies.html";
-  }
   const form = document.getElementById("registroform");
   const errorContainer = document.querySelector(".error");
   form.addEventListener("submit", async function (event) {
@@ -33,16 +29,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (!valid) return;
-
     const user = {
       email: username,
       password,
     };
-
     try {
       const response = await api.post("/users/login", user);
       localStorage.setItem("token", response.data.token);
-      window.location.href = "../movies/movies.html";
+      localStorage.setItem("currentUserRole", JSON.stringify(response.data.user.role));
+      if (response.data.user.role === 1) {
+        window.location.href = "/src/admin/dashboard/dashboard.html";
+      } else {
+        window.location.href = "/src/movies/movies.html";
+      }
     } catch (error) {
       if (error.response) {
         errorContainer.textContent =
