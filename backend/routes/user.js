@@ -31,9 +31,6 @@ router.post(
   userController.login
 );
 
-router.get("/", userController.getAllUsers)
-router.delete("/:userId", userController.deleteUser);
-
 router.post(
   "/favorites",
   [
@@ -55,5 +52,11 @@ router.get(
   protect,
   userController.getFavorites
 );
+
+router.get("/", userController.getAllUsers);
+router.delete("/:userId", userController.deleteUser);
+router.get("/:userId", userController.getUserById);
+router.put("/:userId", userController.updateUser);
+
 
 module.exports = router;

@@ -81,8 +81,12 @@ exports.login = async (req, res, next) => {
 
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const users = await userRepo.getAllUsers();
-    res.status(200).json(users);
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const offset = (page - 1) * limit;
+    const search = req.query.search || "";
+    const [users, total] = await userRepo.getUsersPaginated(limit, offset, search);
+    res.status(200).json({ users, total });
   } catch (error) {
     next(error);
   }
@@ -137,6 +141,28 @@ exports.getFavorites = async (req, res, next) => {
     const userId = req.user.id;
     const favorites = await userRepo.getFavoriteMovies(userId);
     res.status(200).json(favorites);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getUserById = async (req, res, next) => {
+  try {
+    const user = await userRepo.findById(req.params.userId);
+    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateUser = async (req, res, next) => {
+  try {
+    const { name, lastname, email, phone } = req.body;
+    const userId = req.params.userId;
+    const updated = await userRepo.updateUser(userId, { name, lastname, email, phone });
+    if (!updated) return res.status(404).json({ message: "Usuario no encontrado" });
+    res.json({ message: "Usuario actualizado" });
   } catch (error) {
     next(error);
   }

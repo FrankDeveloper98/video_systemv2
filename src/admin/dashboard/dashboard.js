@@ -86,9 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
               <button type="submit">Editar Película</button>
             </form>`;
         modal.classList.add("active");
-      } else if (title === "Editar Usuarios") {
-        window.location.href = "../users/edit/editusers.html";
-      } else {
+      } else if (title === "Administrar Usuarios") {
+        window.location.href = "../users/users.html";
+      } else if (title === "Administrar Peliculas") {
+        window.location.href = "../movies/movies.html";
+
+      }else {
         modalTitle.textContent = title;
         modalBody.innerHTML = `
             <p>Funcionalidad para "${title}" aún no implementada.</p>`;

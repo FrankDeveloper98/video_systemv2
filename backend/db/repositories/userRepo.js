@@ -22,7 +22,16 @@ exports.findByEmail = async (email) => {
 };
 
 exports.findById = async (id) => {
-  return db.oneOrNone('SELECT id, username, email FROM users WHERE id = $1', [id]);
+  return db.oneOrNone('SELECT id, name, lastname, email, phone FROM users WHERE id = $1', [id]);
+};
+
+exports.updateUser = async (id, data) => {
+  const { name, lastname, email, phone } = data;
+  const result = await db.result(
+    'UPDATE users SET name = $1, lastname = $2, email = $3, phone = $4, updated_at = NOW() WHERE id = $5',
+    [name, lastname, email, phone, id]
+  );
+  return result.rowCount > 0;
 };
 
 exports.addToFavorites = async (userId, movieId) => {
@@ -54,4 +63,32 @@ exports.getFavoriteMovies = async (userId) => {
     WHERE uf.id_user = $1
     ORDER BY m.title
   `, [userId]);
+};
+
+exports.getUsersPaginated = async (limit, offset, search = "") => {
+  let users, totalResult;
+  if (search) {
+    const searchQuery = `%${search.toLowerCase()}%`;
+    users = await db.manyOrNone(
+      `SELECT * FROM users WHERE 
+        LOWER(name) LIKE $1 OR 
+        LOWER(lastname) LIKE $1 OR 
+        LOWER(email) LIKE $1 OR 
+        phone LIKE $1 
+      ORDER BY id LIMIT $2 OFFSET $3`,
+      [searchQuery, limit, offset]
+    );
+    totalResult = await db.one(
+      `SELECT COUNT(*) FROM users WHERE 
+        LOWER(name) LIKE $1 OR 
+        LOWER(lastname) LIKE $1 OR 
+        LOWER(email) LIKE $1 OR 
+        phone LIKE $1`,
+      [searchQuery]
+    );
+  } else {
+    users = await db.manyOrNone('SELECT * FROM users ORDER BY id LIMIT $1 OFFSET $2', [limit, offset]);
+    totalResult = await db.one('SELECT COUNT(*) FROM users');
+  }
+  return [users, parseInt(totalResult.count, 10)];
 };
