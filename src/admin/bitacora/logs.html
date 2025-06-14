@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bitacora</title>
+    <link rel="stylesheet" href="logs.css">
+    <script type="module" src="logs.js"></script>
+  </head>
+  <body>
+    <h2 class="page-title">Bitacora</h2>
+    <div class="main-content">
+      <div class="filters-container">
+        <div>
+          <label for="entriesPerPage">Entradas por página:</label>
+          <select id="entriesPerPage">
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+        <div>
+          <label for="searchInput">Buscar:</label>
+          <input type="text" id="searchInput" placeholder="Buscar..." />
+        </div>
+      </div>
+      <table id="logsTable">
+        <thead>
+          <tr>
+            <th data-sort="id">ID</th>
+            <th data-sort="username">Usuario</th>
+            <th data-sort="login_time">Ingreso</th>
+            <th data-sort="logout_time">Cierre</th>
+            <th data-sort="browser">Navegador</th>
+            <th data-sort="ip_address">IP</th>
+            <th data-sort="machine_name">Maquina</th>
+            <th data-sort="table_name">Tabla</th>
+            <th data-sort="action_type">Acción</th>
+            <th data-sort="description">Descripción</th>
+            <th data-sort="action_time">Tiempo Accion</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="pagination"></div>
+    </div>
+  </body>
+</html>
