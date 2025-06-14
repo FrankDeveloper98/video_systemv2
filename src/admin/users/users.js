@@ -54,8 +54,9 @@ function addDeleteListeners() {
   deleteButtons.forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       const userId = e.target.getAttribute("data-id");
+      const email = localStorage.getItem("userEmail"); 
       try {
-        await api.delete(`/users/${userId}`);
+        await api.delete(`/users/${userId}?email=${email}`);
         e.target.closest("tr").remove();
         alert("Usuario eliminado correctamente.");
         renderUsers(currentPage); // Refresh after delete
@@ -111,11 +112,12 @@ userForm.onsubmit = async (e) => {
   const email = document.getElementById("modalEmail").value;
   const phone = document.getElementById("modalPhone").value;
   const password = document.getElementById("modalPassword").value;
+  const userAction = localStorage.getItem("userEmail");
   try {
     if (id) {
       await api.put(`/users/${id}`, { name, lastname, email, phone });
     } else {
-      await api.post(`/users/register`, { name, lastname, email, phone, password });
+      await api.post(`/users/register`, { name, lastname, email, phone, password, userAction });
     }
     closeModal();
     renderUsers(currentPage);

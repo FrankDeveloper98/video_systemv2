@@ -9,6 +9,21 @@
     <script type="module" src="/src/utils/authGuard.js"></script>
   </head>
   <body>
-    <div class="movie-list"></div>
+    <div class="content">
+      <div class="movies-header">
+        <input type="text" id="searchInput" placeholder="Buscar Peliculas" />
+        <select id="yearFilter">
+          <option value="">Todos los años</option>
+        </select>
+        <!-- <button id="addMovie">Añadir Pelicula</button> -->
+      </div>
+      <div class="movie-list" id="movieList"></div>
+      <div class="pagination" id="pagination"></div>
+      <div class="modal" id="movieModal">
+        <div class="modal-content" id="modalContent">
+          <span class="close" id="closeModal">&times;</span>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

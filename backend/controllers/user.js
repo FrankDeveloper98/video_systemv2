@@ -2,10 +2,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userRepo = require("../db/repositories/userRepo");
 const config = require("../config/server");
+const setDbSessionVars = require('../middleware/dbSessionVars');
+const db = require('../config/db');
+const { logLogin, logLogout } = require('../utils/logUserSession');
 
 exports.register = async (req, res, next) => {
   try {
     const { name, lastname, email, password, phone } = req.body;
+    const username = req.body.userAction || 'anonymous';
+    await setDbSessionVars(req, db, username);
 
     const existingUser = await userRepo.findByEmail(email);
     if (existingUser) {
@@ -65,6 +70,8 @@ exports.login = async (req, res, next) => {
       expiresIn: config.jwtExpiresIn,
     });
 
+    await logLogin(req, email);
+
     res.json({
       message: "Login successful",
       token,
@@ -96,8 +103,11 @@ exports.getAllUsers = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    await userRepo.deleteUser(userId);
-    res.status(200).json({ message: "Usuario eliminado correctamente" });
+    const username = req.query.email || 'anonymous';
+    if (username) {
+      await userRepo.deleteUser(userId, req, username);
+      res.status(200).json({ message: "Usuario eliminado correctamente" });
+    }
   } catch (error) {
     next(error);
   }
@@ -107,6 +117,7 @@ exports.addToFavorites = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { movieId } = req.body;
+    const username = req.body.email || 'anonymous';
 
     const existingFavorite = await userRepo.getFavoriteByUserAndMovie(
       userId,
@@ -118,7 +129,7 @@ exports.addToFavorites = async (req, res, next) => {
         .json({ message: "La película ya está en favoritos" });
     }
 
-    await userRepo.addToFavorites(userId, movieId);
+    await userRepo.addToFavorites(userId, movieId, req, username);
     res.status(200).json({ message: "Película agregada a favoritos" });
   } catch (error) {
     next(error);
@@ -129,8 +140,9 @@ exports.removeFromFavorites = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { movieId } = req.params;
+    const username = req.query.email || 'anonymous';
 
-    await userRepo.removeFromFavorites(userId, movieId);
+    await userRepo.removeFromFavorites(userId, movieId, req, username);
     res.status(200).json({ message: "Película eliminada de favoritos" });
   } catch (error) {
     next(error);
@@ -164,6 +176,16 @@ exports.updateUser = async (req, res, next) => {
     const updated = await userRepo.updateUser(userId, { name, lastname, email, phone });
     if (!updated) return res.status(404).json({ message: "Usuario no encontrado" });
     res.json({ message: "Usuario actualizado" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.logout = async (req, res, next) => {
+  try {
+    const username = req.body.email || 'anonymous';
+    await logLogout(req, username);
+    res.status(200).json({ message: "Logout exitoso" });
   } catch (error) {
     next(error);
   }

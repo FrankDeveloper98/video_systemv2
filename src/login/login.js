@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const response = await api.post("/users/login", user);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("currentUserRole", JSON.stringify(response.data.user.role));
+      localStorage.setItem("userEmail", response.data.user.email);
       if (response.data.user.role === 1) {
         window.location.href = "/src/admin/dashboard/dashboard.html";
       } else {

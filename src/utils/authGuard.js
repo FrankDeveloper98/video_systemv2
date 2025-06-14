@@ -7,7 +7,22 @@ const pageAccess = [
     redirectIfNotAllowed: "/src/movies/movies.html"
   },
   {
+    path: "/src/admin/movies/movies.html",
+    allowedRoles: [1],
+    redirectIfNotAllowed: "/src/movies/movies.html"
+  },
+  {
+    path: "/src/admin/users/users.html",
+    allowedRoles: [1],
+    redirectIfNotAllowed: "/src/movies/movies.html"
+  },
+  {
     path: "/src/movies/movies.html",
+    allowedRoles: [2], 
+    redirectIfNotAllowed: "/src/login/login.html"
+  },
+  {
+    path: "/src/favorites/favorites.html",
     allowedRoles: [2], 
     redirectIfNotAllowed: "/src/login/login.html"
   },

@@ -1,3 +1,4 @@
+const setDbSessionVars = require('../../middleware/dbSessionVars');
 const db = require('../../config/db');
 
 exports.getAllUsers = async () => {
@@ -13,7 +14,8 @@ exports.create = async (userData) => {
   );
 };
 
-exports.deleteUser = async (id) => {
+exports.deleteUser = async (id, req, username) => {
+  await setDbSessionVars(req, db, username);
   return db.none('DELETE FROM users WHERE id = $1', [id]);
 }
 
@@ -34,14 +36,16 @@ exports.updateUser = async (id, data) => {
   return result.rowCount > 0;
 };
 
-exports.addToFavorites = async (userId, movieId) => {
+exports.addToFavorites = async (userId, movieId, req, username) => {
+  await setDbSessionVars(req, db, username);
   return db.none(
     'INSERT INTO user_favorites (id_user, id_movie) VALUES ($1, $2)',
     [userId, movieId]
   );
 };
 
-exports.removeFromFavorites = async (userId, movieId) => {
+exports.removeFromFavorites = async (userId, movieId, req, username) => {
+  await setDbSessionVars(req, db, username);
   return db.none(
     'DELETE FROM user_favorites WHERE id_user = $1 AND id_movie = $2',
     [userId, movieId]

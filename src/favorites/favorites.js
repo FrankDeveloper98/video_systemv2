@@ -163,7 +163,8 @@ async function handleRemoveFromFavorites() {
     );
     if (!confirmRemove) return;
 
-    await api.delete(`/users/favorites/${movieId}`);
+    const emailUser = localStorage.getItem("userEmail");
+    await api.delete(`/users/favorites/${movieId}?email=${emailUser}`);
     favoriteMovies = favoriteMovies.filter((movie) => movie.id != movieId);
     filteredFavorites = filteredFavorites.filter(
       (movie) => movie.id != movieId

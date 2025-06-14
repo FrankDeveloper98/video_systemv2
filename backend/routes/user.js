@@ -57,6 +57,10 @@ router.get("/", userController.getAllUsers);
 router.delete("/:userId", userController.deleteUser);
 router.get("/:userId", userController.getUserById);
 router.put("/:userId", userController.updateUser);
-
+router.post(
+  "/logout",
+  protect,
+  userController.logout
+);
 
 module.exports = router;

@@ -52,16 +52,18 @@ document.addEventListener("DOMContentLoaded", () => {
           const cast = document.getElementById("cast").value;
           const rating = document.getElementById("rating").value;
 
+          const email = localStorage.getItem("userEmail");
           const movieData = {
             movie_poster: poster,
             title: movieTitle,
             year: movieYear,
             summary: summary,
-            genres: genres.split(",").map((genre) => genre.trim()),
+            genres: genres,
             runtime: runtime,
             director: director,
-            cast: cast.split(",").map((actor) => actor.trim()),
+            cast: cast,
             rating: rating,
+            email: email,
           };
           const response = await api.post("/movies", movieData);
           console.log(movieData);
@@ -76,17 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         modal.classList.add("active");
-      } else if (title === "Editar Peliculas") {
-        modalTitle.textContent = title;
-        modalBody.innerHTML = `
-            <form id="editMovieForm">
-              <label for="movieId">ID de Película:</label>
-              <input type="text" id="movieId" name="movieId" required>
-              <label for="newMovieTitle">Nuevo Título:</label>
-              <input type="text" id="newMovieTitle" name="newMovieTitle" required>
-              <button type="submit">Editar Película</button>
-            </form>`;
-        modal.classList.add("active");
+      } else if (title === "Bitacora") {
+        window.location.href = "../logs/logs.html";
       } else if (title === "Administrar Usuarios") {
         window.location.href = "../users/users.html";
       } else if (title === "Administrar Peliculas") {

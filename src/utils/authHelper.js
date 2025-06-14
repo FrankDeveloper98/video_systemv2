@@ -1,3 +1,5 @@
+import api from "./apiHelper";
+
 export function requireAuth(redirectToLogin = true) {
   const token = localStorage.getItem("token");
   if (!token && redirectToLogin) {
@@ -22,7 +24,17 @@ export function getCurrentUserRole() {
 }
 
 // Removes token and role, then redirects to login
-export function logout() {
+export async function logout() {
+  const token = localStorage.getItem("token");
+  try {
+    if (token) {
+      await api.post("/users/logout",{
+        email: localStorage.getItem("userEmail")
+      });
+    }
+  } catch (e) {
+    console.error("Error during logout:", e);
+  }
   localStorage.removeItem("token");
   localStorage.removeItem("currentUserRole");
   window.location.href = "/src/login/login.html";

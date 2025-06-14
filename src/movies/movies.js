@@ -304,8 +304,10 @@ async function handleAddToFavorites() {
         updateFavoritesButton(movieId);
       }, 1500);
     } else {
+      const userEmail = localStorage.getItem("userEmail"); // Asegúrate de guardar el email en localStorage al hacer login
       const response = await api.post("/users/favorites", {
         movieId: parseInt(movieId),
+        email: userEmail
       });
       userFavorites.push(parseInt(movieId));
       updateFavoritesButton(movieId);

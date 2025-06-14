@@ -191,6 +191,10 @@ header h1 {
   padding: 2rem;
   border-radius: 8px;
   height: fit-content;
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overflow: scroll;
   min-width: 50vw;
 }
 .close-btn {
