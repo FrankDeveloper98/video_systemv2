@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         modal.classList.add("active");
       } else if (title === "Bitacora") {
-        window.location.href = "../logs/logs.html";
+        window.location.href = "../bitacora/logs.html";
       } else if (title === "Administrar Usuarios") {
         window.location.href = "../users/users.html";
       } else if (title === "Administrar Peliculas") {
