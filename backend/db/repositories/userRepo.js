@@ -69,7 +69,15 @@ exports.getFavoriteMovies = async (userId) => {
   `, [userId]);
 };
 
-exports.getUsersPaginated = async (limit, offset, search = "") => {
+exports.getUsersPaginated = async (limit, offset, search = "", sort = { key: null, asc: true }) => {
+  const allowedSortKeys = ["id", "name", "lastname", "email", "phone"];
+  let orderBy = "id";
+  let orderDir = "ASC";
+  if (sort && sort.key && allowedSortKeys.includes(sort.key)) {
+    orderBy = sort.key;
+    orderDir = sort.asc ? "ASC" : "DESC";
+  }
+
   let users, totalResult;
   if (search) {
     const searchQuery = `%${search.toLowerCase()}%`;
@@ -79,7 +87,7 @@ exports.getUsersPaginated = async (limit, offset, search = "") => {
         LOWER(lastname) LIKE $1 OR 
         LOWER(email) LIKE $1 OR 
         phone LIKE $1 
-      ORDER BY id LIMIT $2 OFFSET $3`,
+      ORDER BY ${orderBy} ${orderDir} LIMIT $2 OFFSET $3`,
       [searchQuery, limit, offset]
     );
     totalResult = await db.one(
@@ -91,7 +99,10 @@ exports.getUsersPaginated = async (limit, offset, search = "") => {
       [searchQuery]
     );
   } else {
-    users = await db.manyOrNone('SELECT * FROM users ORDER BY id LIMIT $1 OFFSET $2', [limit, offset]);
+    users = await db.manyOrNone(
+      `SELECT * FROM users ORDER BY ${orderBy} ${orderDir} LIMIT $1 OFFSET $2`,
+      [limit, offset]
+    );
     totalResult = await db.one('SELECT COUNT(*) FROM users');
   }
   return [users, parseInt(totalResult.count, 10)];

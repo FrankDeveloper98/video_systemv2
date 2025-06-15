@@ -93,7 +93,12 @@ exports.getAllUsers = async (req, res, next) => {
     const limit = parseInt(req.query.limit, 10) || 10;
     const offset = (page - 1) * limit;
     const search = req.query.search || "";
-    const [users, total] = await userRepo.getUsersPaginated(limit, offset, search);
+    let sort = { key: null, asc: true };
+    if (req.query.sort) {
+      sort.key = req.query.sort;
+      sort.asc = req.query.asc === "false" ? false : true;
+    }
+    const [users, total] = await userRepo.getUsersPaginated(limit, offset, search, sort);
     res.status(200).json({ users, total });
   } catch (error) {
     next(error);
